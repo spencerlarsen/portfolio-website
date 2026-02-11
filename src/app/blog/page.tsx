@@ -1,24 +1,15 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { getAllPosts } from '@/lib/blog';
 
 export const metadata: Metadata = {
   title: 'Blog',
   description: 'Technical articles, insights, and project writeups by Spencer Larsen',
 };
 
-// Sample blog posts - will be replaced with MDX content
-const samplePosts = [
-  {
-    slug: 'welcome-to-my-portfolio',
-    title: 'Welcome to My Portfolio',
-    excerpt: 'Introducing my new portfolio website built with Next.js, TypeScript, and Tailwind CSS. Learn about the technologies and design decisions behind this project.',
-    date: 'February 11, 2026',
-    readTime: '5 min read',
-    tags: ['Next.js', 'Web Development', 'Portfolio'],
-  },
-];
-
 export default function BlogPage() {
+  const posts = getAllPosts();
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -36,9 +27,9 @@ export default function BlogPage() {
       {/* Blog Posts */}
       <section className="px-4 sm:px-6 lg:px-8 py-16">
         <div className="max-w-4xl mx-auto">
-          {samplePosts.length > 0 ? (
+          {posts.length > 0 ? (
             <div className="space-y-12">
-              {samplePosts.map((post) => (
+              {posts.map((post) => (
                 <article key={post.slug} className="border-b border-gray-200 pb-12 last:border-b-0">
                   <Link href={`/blog/${post.slug}`}>
                     <h2 className="text-3xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors">
@@ -47,9 +38,21 @@ export default function BlogPage() {
                   </Link>
                   
                   <div className="flex items-center text-sm text-gray-500 mb-4">
-                    <time dateTime={post.date}>{post.date}</time>
+                    <time dateTime={post.date}>
+                      {new Date(post.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </time>
                     <span className="mx-2">•</span>
-                    <span>{post.readTime}</span>
+                    <span>{post.readingTime}</span>
+                    {post.author && (
+                      <>
+                        <span className="mx-2">•</span>
+                        <span>{post.author}</span>
+                      </>
+                    )}
                   </div>
 
                   <p className="text-gray-600 mb-4 text-lg">{post.excerpt}</p>
@@ -78,15 +81,18 @@ export default function BlogPage() {
             </div>
           ) : (
             <div className="text-center py-16">
-              <p className="text-gray-600 text-lg">
+              <p className="text-gray-600 text-lg mb-4">
                 No blog posts yet. Check back soon!
+              </p>
+              <p className="text-gray-500 text-sm">
+                Add your first post by creating a .mdx file in <code className="bg-gray-100 px-2 py-1 rounded">content/blog/</code>
               </p>
             </div>
           )}
         </div>
       </section>
 
-      {/* Subscribe CTA (placeholder) */}
+      {/* Subscribe CTA */}
       <section className="px-4 sm:px-6 lg:px-8 py-16 bg-gray-50">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">

@@ -1,0 +1,226 @@
+---
+title: "Getting Started with Next.js 14"
+date: "2026-02-10"
+excerpt: "A comprehensive guide to building modern web applications with Next.js 14, covering the new App Router, Server Components, and best practices."
+tags: ["Next.js", "React", "Tutorial", "Web Development"]
+author: "Spencer Larsen"
+---
+
+# Getting Started with Next.js 14
+
+Next.js 14 brings exciting new features and improvements that make building web applications even better. In this guide, we'll explore the key concepts and get you started with your first Next.js project.
+
+## What is Next.js?
+
+Next.js is a React framework that provides:
+
+- **Server-Side Rendering (SSR)**: Render pages on the server for better SEO
+- **Static Site Generation (SSG)**: Pre-render pages at build time
+- **API Routes**: Build your API within the same codebase
+- **File-based Routing**: No need to configure routes manually
+- **Automatic Code Splitting**: Only load what's needed for each page
+
+## Installation
+
+Getting started is simple. Create a new Next.js project:
+
+```bash
+npx create-next-app@latest my-app
+cd my-app
+npm run dev
+```
+
+The CLI will ask you configuration questions:
+
+- TypeScript? **Yes** (recommended)
+- ESLint? **Yes**
+- Tailwind CSS? **Yes** (optional but great)
+- App Router? **Yes** (the new way)
+
+## Project Structure
+
+A typical Next.js 14 project structure:
+
+```
+my-app/
+├── app/
+│   ├── layout.tsx      # Root layout
+│   ├── page.tsx        # Home page
+│   └── about/
+│       └── page.tsx    # About page
+├── components/
+│   └── Header.tsx
+├── public/
+│   └── images/
+└── package.json
+```
+
+## Creating Pages
+
+With the App Router, creating a page is as simple as adding a `page.tsx` file:
+
+```tsx
+// app/about/page.tsx
+export default function AboutPage() {
+  return (
+    <div>
+      <h1>About Us</h1>
+      <p>Welcome to our about page!</p>
+    </div>
+  );
+}
+```
+
+This automatically creates the `/about` route!
+
+## Layouts
+
+Layouts wrap pages and can be nested. The root layout wraps your entire app:
+
+```tsx
+// app/layout.tsx
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <Header />
+        <main>{children}</main>
+        <Footer />
+      </body>
+    </html>
+  );
+}
+```
+
+## Server Components
+
+By default, components in the App Router are **Server Components**:
+
+```tsx
+// This runs on the server!
+async function BlogPost({ id }: { id: string }) {
+  const post = await fetchPost(id);
+  
+  return (
+    <article>
+      <h1>{post.title}</h1>
+      <p>{post.content}</p>
+    </article>
+  );
+}
+```
+
+Benefits:
+- No JavaScript sent to the client
+- Direct database access
+- Better performance
+
+## Client Components
+
+When you need interactivity, use Client Components:
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+  
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Count: {count}
+    </button>
+  );
+}
+```
+
+The `'use client'` directive marks this as a Client Component.
+
+## Data Fetching
+
+Fetch data directly in Server Components:
+
+```tsx
+async function getData() {
+  const res = await fetch('https://api.example.com/data');
+  return res.json();
+}
+
+export default async function Page() {
+  const data = await getData();
+  
+  return <div>{JSON.stringify(data)}</div>;
+}
+```
+
+## Routing
+
+Next.js uses file-based routing:
+
+| File Path | URL |
+|-----------|-----|
+| `app/page.tsx` | `/` |
+| `app/about/page.tsx` | `/about` |
+| `app/blog/[slug]/page.tsx` | `/blog/*` |
+
+Dynamic routes use brackets `[param]`.
+
+## Styling
+
+Next.js supports multiple styling approaches:
+
+### CSS Modules
+```tsx
+import styles from './page.module.css';
+
+export default function Page() {
+  return <div className={styles.container}>Hello</div>;
+}
+```
+
+### Tailwind CSS
+```tsx
+export default function Page() {
+  return (
+    <div className="p-4 bg-blue-500 text-white">
+      Hello
+    </div>
+  );
+}
+```
+
+## Deployment
+
+Deploy to Vercel with zero configuration:
+
+```bash
+npm install -g vercel
+vercel
+```
+
+Or push to GitHub and connect to Vercel for automatic deployments!
+
+## Best Practices
+
+1. **Use Server Components by default**: Only use Client Components when needed
+2. **Implement proper loading states**: Use `loading.tsx` files
+3. **Handle errors gracefully**: Use `error.tsx` files
+4. **Optimize images**: Use the `<Image>` component
+5. **Leverage caching**: Use appropriate cache strategies
+
+## Conclusion
+
+Next.js 14 makes building modern web applications a breeze. The App Router, Server Components, and built-in optimizations provide an excellent developer experience and performance.
+
+Start building your next project with Next.js today!
+
+## Resources
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Next.js GitHub](https://github.com/vercel/next.js)
+- [Vercel Deployment](https://vercel.com)
